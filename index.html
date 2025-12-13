@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>젤리뱀 별사탕 줍줍 스네이크 🐍</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Pretendard Font -->
+    <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+</head>
+
+<body>
+    <div class="game-container">
+        <!-- 1. Intro Screen -->
+        <div id="intro-screen" class="screen active">
+            <div class="glass-card">
+                <div class="logo-area">
+                    <div class="logo-emoji">🐍</div>
+                    <h1 class="game-title">젤리뱀<br>별사탕 줍줍</h1>
+                    <p class="game-subtitle">말랑말랑 힐링 스네이크 게임</p>
+                </div>
+
+                <div class="best-score-display">
+                    <span>🏆 최고 기록</span>
+                    <span id="intro-best-score">0</span>
+                </div>
+
+                <!-- Difficulty Selection directly here -->
+                <div class="difficulty-section">
+                    <p class="section-label">난이도를 선택하세요</p>
+                    <div class="level-selector">
+                        <button class="level-btn" onclick="selectLevel(1)" data-level="1">1<br><span>입문</span></button>
+                        <button class="level-btn" onclick="selectLevel(2)" data-level="2">2<br><span>쉬움</span></button>
+                        <button class="level-btn selected" onclick="selectLevel(3)"
+                            data-level="3">3<br><span>보통</span></button>
+                        <button class="level-btn" onclick="selectLevel(4)" data-level="4">4<br><span>빠름</span></button>
+                        <button class="level-btn" onclick="selectLevel(5)" data-level="5">5<br><span>광속</span></button>
+                    </div>
+                </div>
+
+                <div class="menu-buttons">
+                    <button class="btn-primary pulse-anim" onclick="startGame()">
+                        🚀 게임 시작
+                    </button>
+                    <button class="btn-icon" onclick="toggleSettings()">
+                        <span>⚙️</span> 설정
+                    </button>
+                </div>
+
+                <div id="settings-panel" class="settings-panel hidden">
+                    <div class="setting-item">
+                        <span>🔊 사운드</span>
+                        <button id="btn-sound" class="toggle-btn on" onclick="toggleSound()">ON</button>
+                    </div>
+                    <div class="setting-item">
+                        <span>🧱 벽 통과</span>
+                        <button id="btn-wall" class="toggle-btn off" onclick="toggleWall()">OFF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <!-- Left: Quit -->
+                <button class="header-btn" onclick="quitGame()">
+                    <span>🔙</span>
+                </button>
+
+                <!-- Center: Timer & Score -->
+                <div class="main-status-card">
+                    <div class="timer-display">
+                        <span class="icon">⏰</span>
+                        <span id="game-timer">60</span>s
+                    </div>
+                    <div class="divider"></div>
+                    <div class="score-display">
+                        <span class="icon">⭐</span>
+                        <span id="current-score">0</span>
+                    </div>
+                </div>
+
+                <!-- Right: Best -->
+                <div class="best-score-card">
+                    <span class="label">BEST</span>
+                    <span id="hud-best-score">0</span>
+                </div>
+            </div>
+
+            <div class="canvas-wrapper">
+                <canvas id="game-canvas"></canvas>
+                <!-- Combo Display (Now inside canvas wrapper) -->
+                <div id="combo-display" class="combo-fx hidden">
+                    <span id="combo-count">0</span> COMBO! ✨
+                </div>
+                <div id="countdown-overlay" class="hidden">3</div>
+            </div>
+
+            <!-- Mobile Controls -->
+            <div class="mobile-controls">
+                <div class="d-pad">
+                    <button class="d-btn up" ontouchstart="handleTouchBtn('up', event)"
+                        onclick="handleBtn('up')">⬆️</button>
+                    <div class="d-row">
+                        <button class="d-btn left" ontouchstart="handleTouchBtn('left', event)"
+                            onclick="handleBtn('left')">⬅️</button>
+                        <button class="d-btn down" ontouchstart="handleTouchBtn('down', event)"
+                            onclick="handleBtn('down')">⬇️</button>
+                        <button class="d-btn right" ontouchstart="handleTouchBtn('right', event)"
+                            onclick="handleBtn('right')">➡️</button>
+                    </div>
+                </div>
+                <button class="pause-btn" onclick="togglePause()">⏸️</button>
+            </div>
+        </div>
+
+        <!-- 3. Game Over Screen -->
+        <div id="game-over-screen" class="screen overlay hidden">
+            <div class="glass-card result-card">
+                <h2 class="result-title">게임 오버! 😵</h2>
+                <p id="result-message" class="result-message">젤리뱀이 꼬였어요!</p>
+
+                <div class="result-score-box">
+                    <div class="score-row">
+                        <span>이번 점수</span>
+                        <span id="final-score" class="highlight">0</span>
+                    </div>
+                    <div class="score-row">
+                        <span>최고 기록</span>
+                        <span id="final-best-score">0</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-primary" onclick="restartGame()">
+                        🔄 다시 하기
+                    </button>
+                    <button class="btn-secondary" onclick="goToHome()">
+                        🏠 홈으로
+                    </button>
+                    <button class="btn-outline" onclick="shareGame()">
+                        🔗 공유하기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Elements (Optional placeholders) -->
+    <!-- <audio id="bgm" loop src="assets/bgm.mp3"></audio> -->
+
+    <script src="game.js"></script>
+</body>
+
+</html>
