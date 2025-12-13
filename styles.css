@@ -19,6 +19,35 @@
     -webkit-user-select: none;
 }
 
+/* Moahub Home Button */
+.moahub-home-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px solid white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.moahub-home-btn:hover {
+    transform: scale(1.1);
+    background: white;
+}
+
+.moahub-home-btn:active {
+    transform: scale(0.95);
+}
+
 body {
     font-family: 'Pretendard', sans-serif;
     background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
