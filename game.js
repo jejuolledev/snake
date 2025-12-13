@@ -127,7 +127,7 @@ function startGame() {
 
     // Start Timer
     if (timerInterval) clearInterval(timerInterval);
-    timeLeft = 60;
+    timeLeft = 30;
     document.getElementById('game-timer').textContent = timeLeft;
     startTimer();
 
