@@ -335,11 +335,18 @@ function spawnFood() {
 function gameOver(msg) {
     isGameOver = true;
 
+    // Stop Timer
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
     // Save High Score
     if (score > highScore) {
         highScore = score;
         localStorage.setItem('jellySnakeBest', highScore);
         document.getElementById('final-score').textContent = score + " (NEW!🏆)";
+        updateBestDisplay(); // Refresh UI instantly
     } else {
         document.getElementById('final-score').textContent = score;
     }
@@ -347,7 +354,11 @@ function gameOver(msg) {
     document.getElementById('final-best-score').textContent = highScore;
     document.getElementById('result-message').textContent = msg || '게임 오버!';
 
-    document.getElementById('game-over-screen').classList.remove('hidden');
+    // Show Overlay: Force Visibility
+    const goScreen = document.getElementById('game-over-screen');
+    goScreen.classList.remove('hidden');
+    goScreen.classList.add('active');
+    goScreen.style.display = 'flex'; // Nuclear option
 }
 
 function updateScoreUI() {
