@@ -22,21 +22,25 @@
 /* Moahub Home Button */
 .moahub-home-btn {
     position: absolute;
-    top: 20px;
+    /* Safe Area for Mobile Notch */
+    top: calc(20px + env(safe-area-inset-top));
     left: 20px;
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    /* Increased touch target */
+    height: 50px;
     background: rgba(255, 255, 255, 0.6);
     border: 2px solid white;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     text-decoration: none;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    z-index: 100;
+    z-index: 200;
+    /* Ensure on top of everything */
     transition: transform 0.2s, background 0.2s;
+    backdrop-filter: blur(5px);
 }
 
 .moahub-home-btn:hover {
