@@ -621,12 +621,11 @@ canvas {
 
 /* 푸터 */
 .game-footer {
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
-    padding: 30px 20px;
+    background: transparent;
+    padding: 5px 20px;
     text-align: center;
-    margin-top: 40px;
-    border-top: 2px solid rgba(255, 255, 255, 0.6);
+    margin-top: 5px;
+    border-top: none;
 }
 
 .game-footer .footer-container {
