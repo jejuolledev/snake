@@ -7,14 +7,17 @@ const TILE_COUNT = 24; // 24x24 grid
 // We will recalculate canvas pixels based on container size, but logical grid is fixed.
 
 // Colors
+
 const COLORS = {
     snakeHead: '#FF6B9D',
     snakeBody: '#FF9A9E',
     snakeBorder: '#FFFFFF',
-    food: '#FFD93D',      // Normal (Yellow/Star)
-    foodStar: '#2ecc71',  // Bonus (Green)
+    food: '#18dcff',      // Normal (Vibrant Blue)
+    foodStar: '#FFC312',  // Bonus (Gold)
     poison: '#a29bfe'     // Shrink (Purple Bubble)
 };
+
+
 
 // State
 let gameLoop;
@@ -408,7 +411,18 @@ function draw() {
     ctx.beginPath();
     ctx.arc(fx, fy, fRadius, 0, Math.PI * 2);
     ctx.fillStyle = food.type === 'star' ? COLORS.foodStar : COLORS.food;
+
+    // Glow effect for Star
+    if (food.type === 'star') {
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = "white";
+    }
+
     ctx.fill();
+
+    // Reset Shadow
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = "transparent";
 
     // If star, add sparkle? (simple text for now)
     if (food.type === 'star') {
