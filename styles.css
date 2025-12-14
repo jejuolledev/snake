@@ -541,17 +541,17 @@ canvas {
 /* Custom D-Pad Layout - Cross Shape */
 .d-pad {
     position: relative;
-    width: 200px;
-    height: 140px;
+    width: 260px;
+    height: 180px;
 }
 
 .d-btn {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     background: rgba(255, 255, 255, 0.4);
     border: 2px solid white;
     border-radius: 50%;
-    font-size: 1.5rem;
+    font-size: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -567,30 +567,30 @@ canvas {
 
 .d-btn.up {
     top: 0;
-    left: 70px;
+    left: 90px;
 }
 
 .d-btn.down {
     bottom: 0;
-    left: 70px;
+    left: 90px;
 }
 
 .d-btn.left {
-    top: 40px;
+    top: 50px;
     left: 0;
 }
 
 .d-btn.right {
-    top: 40px;
+    top: 50px;
     right: 0;
 }
 
 .pause-btn {
     background: rgba(255, 255, 255, 0.5);
     border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-size: 1.2rem;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1.5rem;
 }
 
 /* Animations */
