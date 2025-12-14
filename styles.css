@@ -617,3 +617,60 @@ canvas {
         opacity: 1;
     }
 }
+
+/* 푸터 */
+.game-footer {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 30px 20px;
+    text-align: center;
+    margin-top: 40px;
+    border-top: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+.game-footer .footer-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.game-footer .footer-links {
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
+
+.game-footer .footer-links a {
+    color: #555;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.game-footer .footer-links a:hover {
+    color: #7F56D9;
+}
+
+.game-footer .footer-separator {
+    margin: 0 8px;
+    color: #ccc;
+}
+
+.game-footer .footer-copyright {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .game-footer {
+        padding: 24px 16px;
+        margin-top: 30px;
+    }
+
+    .game-footer .footer-links {
+        font-size: 0.85rem;
+    }
+
+    .game-footer .footer-copyright {
+        font-size: 0.85rem;
+    }
+}
