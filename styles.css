@@ -26,7 +26,7 @@
     top: calc(20px + env(safe-area-inset-top));
     left: 20px;
     width: 50px;
-    /* Increased touch target */
+    /* Increased tou*/
     height: 50px;
     background: rgba(255, 255, 255, 0.6);
     border: 2px solid white;
