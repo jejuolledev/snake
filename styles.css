@@ -676,7 +676,7 @@ canvas {
 }
 
 /* 광고와 버튼 사이 간격 0으로 조정 - 게임오버 화면 */
-.action-buttons .btn-primary {
+.action-buttons .btn-secondary {
     margin-bottom: 0;
 }
 
@@ -685,8 +685,14 @@ canvas {
     padding: 0;
 }
 
-.action-buttons .btn-secondary {
+.action-buttons .btn-outline {
     margin-top: 0;
+}
+
+/* 타이틀 아래 광고 간격 */
+.title-ad {
+    margin: 0;
+    padding: 0;
 }
 
 @media (max-width: 600px) {

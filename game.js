@@ -71,6 +71,25 @@ function init() {
         const touchEndY = e.changedTouches[0].screenY;
         handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
     }, { passive: false });
+
+    // 카카오 광고 로드 (스크립트 로드 완료 후)
+    loadIntroAds();
+}
+
+// 인트로 화면 광고 로드
+function loadIntroAds() {
+    // 스크립트가 아직 로드되지 않았으면 재시도
+    if (typeof adfit === 'undefined') {
+        setTimeout(loadIntroAds, 100);
+        return;
+    }
+    // 인트로 화면의 모든 광고 로드
+    document.querySelectorAll('#intro-screen .kakao_ad_area').forEach(ad => {
+        const adUnit = ad.getAttribute('data-ad-unit');
+        if (adUnit) {
+            adfit.display(adUnit);
+        }
+    });
 }
 
 function updateBestDisplay() {
