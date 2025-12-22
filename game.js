@@ -74,6 +74,14 @@ function init() {
 
     // 카카오 광고 로드 (스크립트 로드 완료 후)
     loadIntroAds();
+
+    // 광고 페이드인 (인트로 애니메이션 0.5s 후 등장)
+    setTimeout(() => {
+        const introAd = document.getElementById('intro-ad-container');
+        if (introAd) {
+            introAd.style.opacity = '1';
+        }
+    }, 800);
 }
 
 // 인트로 화면 광고 로드
@@ -90,14 +98,6 @@ function loadIntroAds() {
             adfit.display(adUnit);
         }
     });
-
-    // 광고 페이드인 (인트로 애니메이션 후)
-    const introAd = document.getElementById('intro-ad-container');
-    if (introAd) {
-        setTimeout(() => {
-            introAd.style.opacity = '1';
-        }, 1200); // 애니메이션(0.5s) 완전히 끝난 후 여유있게 등장
-    }
 }
 
 function updateBestDisplay() {
