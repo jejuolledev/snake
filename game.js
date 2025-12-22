@@ -90,6 +90,14 @@ function loadIntroAds() {
             adfit.display(adUnit);
         }
     });
+
+    // 광고 페이드인 (인트로 애니메이션 후)
+    const introAd = document.getElementById('intro-ad-container');
+    if (introAd) {
+        setTimeout(() => {
+            introAd.style.opacity = '1';
+        }, 1200); // 애니메이션(0.5s) 완전히 끝난 후 여유있게 등장
+    }
 }
 
 function updateBestDisplay() {
