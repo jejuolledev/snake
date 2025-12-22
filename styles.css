@@ -709,3 +709,111 @@ canvas {
         font-size: 0.85rem;
     }
 }
+
+/* ========================================
+   캡처 전용 영역 스타일 (공유하기용)
+   ======================================== */
+.capture-area {
+    position: fixed;
+    left: -9999px;
+    top: 0;
+    width: 400px;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 50%, #6B7DFF 100%);
+    border-radius: 24px;
+    z-index: -1;
+    visibility: hidden;
+    overflow: visible;
+}
+
+.capture-card {
+    background: rgba(255, 255, 255, 0.97);
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.capture-logo {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+}
+
+.capture-emoji {
+    font-size: 4rem;
+    margin-bottom: 0.5rem;
+}
+
+.capture-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.capture-message {
+    font-size: 1rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+.capture-score-box {
+    background: linear-gradient(135deg, #FFF5F7 0%, #F0F4FF 100%);
+    padding: 1.2rem;
+    border-radius: 16px;
+    margin-bottom: 1rem;
+    border: 2px solid rgba(255, 107, 157, 0.2);
+}
+
+.capture-score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+.capture-score-row:first-child {
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+    padding-bottom: 0.8rem;
+    margin-bottom: 0.3rem;
+}
+
+.capture-score-label {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.capture-score-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.capture-score-value.best {
+    font-size: 1.3rem;
+    color: var(--secondary);
+}
+
+.capture-promo {
+    background: linear-gradient(135deg, #FF6B9D 0%, #6B7DFF 100%);
+    padding: 1rem;
+    border-radius: 16px;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.capture-promo p {
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.capture-promo .capture-url {
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-top: 0.3rem;
+}

@@ -555,102 +555,159 @@ function handleSwipe(startX, startY, endX, endY) {
     }
 }
 
-// Share Game with Image
-window.shareGame = async function () {
-    const shareBtn = document.querySelector('.btn-outline');
-    const originalText = shareBtn.textContent;
+// ======= 공유하기 기능 =======
+
+// 캐시된 공유 데이터
+let cachedShareData = null;
+
+// 공유 데이터 준비 (프리워밍)
+async function prepareShareData() {
+    console.log('[share] prepareShareData 시작');
+
+    const captureArea = document.getElementById('captureArea');
+    if (!captureArea) {
+        console.error('[share] captureArea 요소를 찾을 수 없습니다');
+        return null;
+    }
+
+    // 캡처 영역 내용 채우기
+    const captureMessage = document.getElementById('captureMessage');
+    const captureScore = document.getElementById('captureScore');
+    const captureBestScore = document.getElementById('captureBestScore');
+    const resultMessage = document.getElementById('result-message');
+
+    if (captureMessage) captureMessage.textContent = resultMessage ? resultMessage.textContent : '게임 오버!';
+    if (captureScore) captureScore.textContent = score;
+    if (captureBestScore) captureBestScore.textContent = highScore;
+
+    // 잠시 표시하여 렌더링
+    captureArea.style.visibility = 'visible';
+    captureArea.style.position = 'fixed';
+    captureArea.style.left = '-9999px';
+    captureArea.style.top = '0';
+
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     try {
-        // 캔버스로 결과 이미지 생성
-        const imageCanvas = document.createElement('canvas');
-        imageCanvas.width = 1200;
-        imageCanvas.height = 630;
-        const ctx = imageCanvas.getContext('2d');
+        const canvas = await html2canvas(captureArea, {
+            scale: 1.5,
+            backgroundColor: null,
+            useCORS: true,
+            logging: false
+        });
 
-        // 배경 그라디언트
-        const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
-        gradient.addColorStop(0, '#FFE5EC');
-        gradient.addColorStop(1, '#FFF5F7');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 1200, 630);
+        console.log('[share] html2canvas 캡처 완료');
 
-        // 뱀 이모지
-        ctx.font = '120px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('🐍', 600, 180);
+        // iOS 파일 크기 문제 대응: JPEG 0.85 품질
+        const blob = await new Promise(resolve => {
+            canvas.toBlob(resolve, 'image/jpeg', 0.85);
+        });
 
-        // 게임 타이틀
-        ctx.fillStyle = '#FF6B9D';
-        ctx.font = 'bold 60px Arial';
-        ctx.fillText('젤리뱀 별사탕 줍줍', 600, 280);
+        const file = new File([blob], 'jelly-snake-score.jpg', { type: 'image/jpeg' });
+        const shareText = `🐍 젤리뱀 별사탕 줍줍에서 ${score}점 달성!\n\n✨ 더 많은 콘텐츠는 moahub.co.kr 에서!`;
+        const shareUrl = window.location.href;
 
-        // 점수
-        ctx.fillStyle = '#2C3E50';
-        ctx.font = 'bold 100px Arial';
-        ctx.fillText(`${score}점`, 600, 420);
+        cachedShareData = { file, shareText, shareUrl };
+        console.log('[share] 공유 데이터 캐싱 완료');
 
-        // 최고기록 표시
-        if (score >= highScore && score > 0) {
-            ctx.fillStyle = '#FFC312';
-            ctx.font = 'bold 40px Arial';
-            ctx.fillText('🏆 NEW RECORD! 🏆', 600, 500);
+        return cachedShareData;
+    } catch (error) {
+        console.error('[share] 캡처 오류:', error);
+        return null;
+    } finally {
+        captureArea.style.visibility = 'hidden';
+    }
+}
+
+// 공유 실행
+window.shareGame = async function () {
+    console.log('[share] shareGame 호출됨');
+
+    // 캐시된 데이터가 없으면 준비
+    let shareData = cachedShareData;
+    if (!shareData) {
+        console.log('[share] 캐시 없음, 새로 준비');
+        shareData = await prepareShareData();
+    }
+
+    if (!shareData) {
+        // 폴백: 링크만 복사
+        const url = window.location.href;
+        try {
+            await navigator.clipboard.writeText(url);
+            alert('링크가 복사되었습니다! 💌');
+        } catch (e) {
+            prompt('아래 링크를 복사하세요:', url);
         }
+        return;
+    }
 
-        // 사이트 URL
-        ctx.fillStyle = '#7F8C8D';
-        ctx.font = '30px Arial';
-        ctx.fillText('moahub.co.kr', 600, 580);
+    const { file, shareText, shareUrl } = shareData;
 
-        // 이미지를 Blob으로 변환
-        const blob = await new Promise(resolve => imageCanvas.toBlob(resolve, 'image/png'));
-        const file = new File([blob], 'jelly-snake-score.png', { type: 'image/png' });
+    // iOS 브라우저 감지
+    const ua = navigator.userAgent;
+    const isIOS = /iPhone|iPad|iPod/.test(ua);
+    const isIOSChrome = isIOS && /CriOS/.test(ua);
+    const isIOSSafari = isIOS && /Safari/.test(ua) && !/CriOS/.test(ua) && !/Chrome/.test(ua);
 
-        // Web Share API 지원 확인
-        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-            // 사파리 체크 (Safari는 url과 files를 같이 공유 가능)
-            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    console.log('[share] iOS:', isIOS, 'Chrome:', isIOSChrome, 'Safari:', isIOSSafari);
 
-            try {
-                if (isSafari) {
-                    // Safari: 이미지 + URL 같이 공유
+    // Web Share API 지원 확인
+    if (navigator.share) {
+        try {
+            // 파일 공유 시도
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                if (isIOSChrome) {
+                    // iOS Chrome: 파일만 공유 (텍스트 포함 시 실패)
+                    console.log('[share] iOS Chrome: files only');
+                    await navigator.share({ files: [file] });
+                } else if (isIOSSafari) {
+                    // iOS Safari: 파일 + 텍스트
+                    console.log('[share] iOS Safari: files + text');
                     await navigator.share({
                         files: [file],
-                        url: window.location.href
+                        text: shareText
                     });
                 } else {
-                    // Chrome 등: 이미지만 공유
+                    // 기타 브라우저: 전체
+                    console.log('[share] Other browser: full share');
                     await navigator.share({
-                        files: [file]
+                        files: [file],
+                        title: '젤리뱀 별사탕 줍줍 결과',
+                        text: shareText,
+                        url: shareUrl
                     });
                 }
-            } catch (err) {
-                // 사용자가 공유 취소한 경우
-                if (err.name !== 'AbortError') {
-                    throw err;
-                }
+                console.log('[share] 파일 공유 성공');
+                return;
             }
-        } else {
-            // Web Share API 미지원 시 클립보드 복사
-            const shareText = `젤리뱀 별사탕 줍줍에서 ${score}점 달성! 🐍⭐\n${window.location.href}`;
-            await navigator.clipboard.writeText(shareText);
-            shareBtn.textContent = '복사 완료! ✓';
-            setTimeout(() => {
-                shareBtn.textContent = originalText;
-            }, 2000);
+
+            // 파일 공유 불가 시 텍스트만
+            console.log('[share] 파일 공유 불가, 텍스트만 시도');
+            await navigator.share({
+                title: '젤리뱀 별사탕 줍줍 결과',
+                text: shareText,
+                url: shareUrl
+            });
+            console.log('[share] 텍스트 공유 성공');
+            return;
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                console.log('[share] 사용자 취소');
+                return;
+            }
+            console.error('[share] 공유 오류:', error);
         }
-    } catch (err) {
-        console.error('Share failed:', err);
-        // 에러 시 클립보드 복사로 fallback
-        const shareText = `젤리뱀 별사탕 줍줍에서 ${score}점 달성! 🐍⭐\n${window.location.href}`;
-        try {
-            await navigator.clipboard.writeText(shareText);
-            shareBtn.textContent = '복사 완료! ✓';
-            setTimeout(() => {
-                shareBtn.textContent = originalText;
-            }, 2000);
-        } catch (clipErr) {
-            alert('공유하기에 실패했습니다.');
-        }
+    }
+
+    // 폴백: 클립보드 복사
+    console.log('[share] 폴백: 클립보드 복사');
+    const fallbackText = `${shareText}\n${shareUrl}`;
+    try {
+        await navigator.clipboard.writeText(fallbackText);
+        alert('결과가 클립보드에 복사되었습니다! 💌');
+    } catch (e) {
+        prompt('아래 내용을 복사하세요:', fallbackText);
     }
 };
 

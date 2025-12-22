@@ -180,9 +180,35 @@
                     <!-- KAKAO_ADFIT_GAMEOVER_END -->
 
                     <button class="btn-outline" onclick="shareGame()">
-                        🔗 공유하기
+                        📤 결과 공유하기
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 결과 캡처용 숨겨진 영역 -->
+    <div class="capture-area" id="captureArea">
+        <div class="capture-card">
+            <div class="capture-logo">🐍 젤리뱀 별사탕 줍줍</div>
+            <div class="capture-emoji">🎮</div>
+            <h2 class="capture-level" id="captureLevelName">게임 오버!</h2>
+            <p class="capture-summary" id="captureMessage"></p>
+
+            <div class="capture-score-box">
+                <div class="capture-score-row">
+                    <span>이번 점수</span>
+                    <span class="capture-score-value" id="captureScore">0</span>
+                </div>
+                <div class="capture-score-row">
+                    <span>최고 기록</span>
+                    <span class="capture-score-value" id="captureBestScore">0</span>
+                </div>
+            </div>
+
+            <div class="capture-promo">
+                <p>✨ 더 많은 콘텐츠는 moahub.co.kr 에서!</p>
+                <p class="capture-url">https://moahub.co.kr</p>
             </div>
         </div>
     </div>
@@ -190,6 +216,8 @@
     <!-- Audio Elements (Optional placeholders) -->
     <!-- <audio id="bgm" loop src="assets/bgm.mp3"></audio> -->
 
+    <!-- html2canvas 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="game.js"></script>
     <script async src="//t1.daumcdn.net/kas/static/ba.min.js"></script>
 
