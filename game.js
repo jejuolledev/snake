@@ -397,6 +397,12 @@ function gameOver(msg) {
 }
 
 function loadGameOverAd() {
+    // AdFit 스크립트 로드 대기
+    if (typeof adfit === 'undefined') {
+        setTimeout(loadGameOverAd, 100);
+        return;
+    }
+
     // 카카오 AdFit 광고 다시 로드
     const adContainer = document.querySelector('.gameover-ad');
     if (adContainer && window.adfit) {
