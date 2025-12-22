@@ -382,8 +382,10 @@ function gameOver(msg) {
     goScreen.classList.add('active');
     goScreen.style.display = 'flex'; // Nuclear option
 
-    // 게임오버 화면 광고 로드
-    loadGameOverAd();
+    // 게임오버 화면이 완전히 표시된 후 광고 로드 (딜레이 추가)
+    setTimeout(() => {
+        loadGameOverAd();
+    }, 300);
 }
 
 function loadGameOverAd() {
