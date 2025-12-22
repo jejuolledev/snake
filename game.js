@@ -520,12 +520,103 @@ function handleSwipe(startX, startY, endX, endY) {
     }
 }
 
-// Link Sharing
-window.shareGame = function () {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url).then(() => {
-        alert('링크가 복사되었습니다! 💌');
-    });
+// Share Game with Image
+window.shareGame = async function () {
+    const shareBtn = document.querySelector('.btn-outline');
+    const originalText = shareBtn.textContent;
+
+    try {
+        // 캔버스로 결과 이미지 생성
+        const imageCanvas = document.createElement('canvas');
+        imageCanvas.width = 1200;
+        imageCanvas.height = 630;
+        const ctx = imageCanvas.getContext('2d');
+
+        // 배경 그라디언트
+        const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+        gradient.addColorStop(0, '#FFE5EC');
+        gradient.addColorStop(1, '#FFF5F7');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 1200, 630);
+
+        // 뱀 이모지
+        ctx.font = '120px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('🐍', 600, 180);
+
+        // 게임 타이틀
+        ctx.fillStyle = '#FF6B9D';
+        ctx.font = 'bold 60px Arial';
+        ctx.fillText('젤리뱀 별사탕 줍줍', 600, 280);
+
+        // 점수
+        ctx.fillStyle = '#2C3E50';
+        ctx.font = 'bold 100px Arial';
+        ctx.fillText(`${score}점`, 600, 420);
+
+        // 최고기록 표시
+        if (score >= highScore && score > 0) {
+            ctx.fillStyle = '#FFC312';
+            ctx.font = 'bold 40px Arial';
+            ctx.fillText('🏆 NEW RECORD! 🏆', 600, 500);
+        }
+
+        // 사이트 URL
+        ctx.fillStyle = '#7F8C8D';
+        ctx.font = '30px Arial';
+        ctx.fillText('moahub.co.kr', 600, 580);
+
+        // 이미지를 Blob으로 변환
+        const blob = await new Promise(resolve => imageCanvas.toBlob(resolve, 'image/png'));
+        const file = new File([blob], 'jelly-snake-score.png', { type: 'image/png' });
+
+        // Web Share API 지원 확인
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            // 사파리 체크 (Safari는 url과 files를 같이 공유 가능)
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+            try {
+                if (isSafari) {
+                    // Safari: 이미지 + URL 같이 공유
+                    await navigator.share({
+                        files: [file],
+                        url: window.location.href
+                    });
+                } else {
+                    // Chrome 등: 이미지만 공유
+                    await navigator.share({
+                        files: [file]
+                    });
+                }
+            } catch (err) {
+                // 사용자가 공유 취소한 경우
+                if (err.name !== 'AbortError') {
+                    throw err;
+                }
+            }
+        } else {
+            // Web Share API 미지원 시 클립보드 복사
+            const shareText = `젤리뱀 별사탕 줍줍에서 ${score}점 달성! 🐍⭐\n${window.location.href}`;
+            await navigator.clipboard.writeText(shareText);
+            shareBtn.textContent = '복사 완료! ✓';
+            setTimeout(() => {
+                shareBtn.textContent = originalText;
+            }, 2000);
+        }
+    } catch (err) {
+        console.error('Share failed:', err);
+        // 에러 시 클립보드 복사로 fallback
+        const shareText = `젤리뱀 별사탕 줍줍에서 ${score}점 달성! 🐍⭐\n${window.location.href}`;
+        try {
+            await navigator.clipboard.writeText(shareText);
+            shareBtn.textContent = '복사 완료! ✓';
+            setTimeout(() => {
+                shareBtn.textContent = originalText;
+            }, 2000);
+        } catch (clipErr) {
+            alert('공유하기에 실패했습니다.');
+        }
+    }
 };
 
 // Start
