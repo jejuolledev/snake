@@ -660,7 +660,7 @@ canvas {
     margin: 0;
 }
 
-/* 광고와 버튼 사이 간격 0으로 조정 */
+/* 광고와 버튼 사이 간격 0으로 조정 - 인트로 화면 */
 .menu-buttons .btn-primary {
     margin-bottom: 0;
 }
@@ -671,7 +671,22 @@ canvas {
 }
 
 .menu-buttons .btn-icon {
+    margin-top: 0;
     margin-bottom: 0;
+}
+
+/* 광고와 버튼 사이 간격 0으로 조정 - 게임오버 화면 */
+.action-buttons .btn-primary {
+    margin-bottom: 0;
+}
+
+.action-buttons .gameover-ad {
+    margin: 0;
+    padding: 0;
+}
+
+.action-buttons .btn-secondary {
+    margin-top: 0;
 }
 
 @media (max-width: 600px) {

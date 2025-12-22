@@ -362,6 +362,20 @@ function gameOver(msg) {
     goScreen.classList.remove('hidden');
     goScreen.classList.add('active');
     goScreen.style.display = 'flex'; // Nuclear option
+
+    // 게임오버 화면 광고 로드
+    loadGameOverAd();
+}
+
+function loadGameOverAd() {
+    // 카카오 AdFit 광고 다시 로드
+    const adContainer = document.querySelector('.gameover-ad');
+    if (adContainer && window.adfit) {
+        // 기존 광고 초기화
+        adContainer.innerHTML = '<ins class="kakao_ad_area" style="display:none;" data-ad-unit="DAN-ZUtEWIJRDcHkQ4SQ" data-ad-width="320" data-ad-height="50"></ins>';
+        // 광고 다시 로드
+        adfit.display('DAN-ZUtEWIJRDcHkQ4SQ');
+    }
 }
 
 function updateScoreUI() {
